@@ -9,15 +9,20 @@ ZMQ and updates ipset accordingly.
 See `requirements.txt` for needed Python3 packages.
 
 
-## DynFW certificate
+## Get started
 
-You can download Sentinel:DynFW ZMQ certificate via:
+Check whether your Linux distributions uses Nftables or legacy Ipset.
+FirewallD supports both.
 
+Then run the client (this example uses Nftables):
 ```sh
-curl -LO https://repo.turris.cz/sentinel/dynfw.pub
+python client.py --backend nftables
 ```
 
-and then run the client:
+Ipset is still the default backend and hence --backend can be omitted.
+
+Check
 ```sh
-python client.py --cert dynfw.pub
+python client.py --help
 ```
+for available configuration options.

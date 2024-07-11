@@ -1,0 +1,15 @@
+# Default settings for sentinel-dynfw-client
+# (Turris Sentinel dynamic firewall client).
+
+# Which backend to use, either "ipset" or "nftables".
+DYNFW_BACKEND="nftables"
+
+# Nftables table where the set speficied above will be created.
+# Ignored if using Ipset.
+DYNFW_NFT_TABLE="inet filter"
+
+# IP addresses set name.
+DYNFW_SET="sentinel-dynfw"
+
+# Arguments to pass to the executable.
+DYNFW_ARGS=""

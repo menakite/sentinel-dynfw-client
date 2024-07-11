@@ -1,13 +1,37 @@
 [Unit]
-Description=Turris dynamic firewall client
-After=network.target
+Description=Turris Sentinel dynamic firewall client
+Wants=network-online.target
+After=network-online.target
 
 [Service]
-Type=simple
-ExecStartPre=/usr/bin/mkdir -p -m 0700 /var/cache/sentinel
-ExecStartPre=/usr/bin/curl -f -s https://repo.turris.cz/sentinel/dynfw.pub -o /var/cache/sentinel/sentinel_server.key
-ExecStartPre=/usr/sbin/ipset create turris-dynfw hash:ip -exist
-ExecStart=/usr/bin/sentinel-dynfw-client --ipset turris-dynfw -c /var/cache/sentinel/sentinel_server.key
+EnvironmentFile=/etc/default/sentinel-dynfw-client
+Type=notify
+RuntimeDirectory=sentinel
+ExecStart=/usr/local/bin/sentinel-dynfw-client --cache-dir "${RUNTIME_DIRECTORY}" --backend "${DYNFW_BACKEND}" --table "${DYNFW_NFT_TABLE}" --ipset $DYNFW_SET $DYNFW_ARGS
+ProtectSystem=strict
+ProtectHome=yes
+ProtectProc=invisible
+ProcSubset=pid
+PrivateTmp=yes
+PrivateDevices=yes
+NoNewPrivileges=yes
+ProtectHostname=yes
+ProtectClock=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_NETLINK AF_UNIX
+RestrictNamespaces=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+Restart=on-abnormal
+RestartSec=5
+TimeoutStopSec=5
+StartLimitBurst=3
 
 [Install]
 WantedBy=multi-user.target
