@@ -155,9 +155,10 @@ class FirewallProxy:
             if self.validate_ip_address(ip_address):
                 valid_ips.append(ip_address)
             else:
-                get_logger().warning('(+) IP address discarded as it is either not valid or not globally routable: %s', ip)
+                get_logger().warning('(+) IP address discarded as it is either not valid or not globally routable: %s', ip_address)
 
-        self.execute(Actions.ADD_ELEMENT, valid_ips)
+        if valid_ips:
+            self.execute(Actions.ADD_ELEMENT, valid_ips)
 
     def del_ip(self, ip):
         if self.validate_ip_address(ip):
@@ -489,6 +490,7 @@ def main():
     del socket
 
     context.setsockopt(zmq.LINGER, 0)
+    context.setsockopt(zmq.RCVHWM, 0)
     context.setsockopt(zmq.TCP_KEEPALIVE, True)
     context.setsockopt(zmq.TCP_KEEPALIVE_IDLE, 120)  # Seconds (2 minutes)
     context.setsockopt(zmq.TCP_KEEPALIVE_CNT, 3)  # 3 retries
